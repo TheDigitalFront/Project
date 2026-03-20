@@ -40,6 +40,8 @@ local-xdebuginfo.php
 # htaccess
 /.htaccess
 
+wp-content/db.php
+
 # All plugins
 #
 # Note: If you wish to whitelist plugins,
