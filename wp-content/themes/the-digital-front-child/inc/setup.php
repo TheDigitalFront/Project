@@ -21,7 +21,7 @@
  * @since   1.0.0
  */
 
-define( 'TDF_SETUP_VERSION', '6' );
+define( 'TDF_SETUP_VERSION', '8' );
 
 /**
  * Master setup function — orchestrates all one-time configuration.
@@ -36,6 +36,15 @@ define( 'TDF_SETUP_VERSION', '6' );
 function tdf_run_setup() {
 	if ( get_option( 'tdf_setup_version' ) === TDF_SETUP_VERSION ) {
 		return;
+	}
+
+	// 0. Clean up legacy Blog page if it exists from an earlier setup.
+	$legacy_blog = get_posts( [
+		'post_type' => 'page', 'meta_key' => '_tdf_is_blog', 'meta_value' => '1',
+		'numberposts' => 1, 'post_status' => 'any',
+	] );
+	if ( $legacy_blog ) {
+		wp_delete_post( $legacy_blog[0]->ID, true );
 	}
 
 	// 1. Activate required plugins (safe to call repeatedly).
@@ -138,7 +147,28 @@ function tdf_setup_activate_plugins() {
 function tdf_setup_create_pages() {
 	$pages = [
 		'Home'     => [ 'content' => '', 'meta' => '_tdf_is_home' ],
-		'About Us' => [ 'content' => '<!-- wp:paragraph --><p>Learn more about The Digital Front.</p><!-- /wp:paragraph -->', 'meta' => '_tdf_is_about' ],
+		'About Us' => [
+			'content' => '<!-- wp:heading {"level":2} -->
+<h2>Who We Are</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The Digital Front is a student-led tech publication created as part of INFO 3602 — Web Programming II at The University of the West Indies. We cover the latest in mobile devices, software, and digital culture.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>Our team of three writers brings together different perspectives on technology — from hardware reviews to industry analysis — with the goal of creating a professional-quality publication powered entirely by WordPress.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":2} -->
+<h2>What We Do</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>We publish articles, reviews, and opinion pieces across categories like Apple, Google, Samsung, and Mobile Devices. Every piece of content on this site was written, designed, and developed by our team.</p>
+<!-- /wp:paragraph -->',
+			'meta' => '_tdf_is_about',
+		],
 	];
 
 	$ids = [];
@@ -151,6 +181,10 @@ function tdf_setup_create_pages() {
 
 		if ( $existing ) {
 			$ids[ $title ] = $existing[0]->ID;
+			// Update content if our version is richer than what's stored.
+			if ( $cfg['content'] && strlen( $cfg['content'] ) > strlen( $existing[0]->post_content ) ) {
+				wp_update_post( [ 'ID' => $existing[0]->ID, 'post_content' => $cfg['content'] ] );
+			}
 			continue;
 		}
 
@@ -170,8 +204,66 @@ function tdf_setup_create_pages() {
 	// Child pages under About Us (2-level hierarchy for R4).
 	$about_id = $ids['About Us'] ?? 0;
 	$children = [
-		'Team'    => [ 'content' => '<!-- wp:paragraph --><p>Meet the team behind The Digital Front.</p><!-- /wp:paragraph -->', 'meta' => '_tdf_is_team' ],
-		'Mission' => [ 'content' => '<!-- wp:paragraph --><p>Our mission at The Digital Front.</p><!-- /wp:paragraph -->', 'meta' => '_tdf_is_mission' ],
+		'Team' => [
+			'content' => '<!-- wp:heading {"level":2} -->
+<h2>Meet the Team</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>We are three students from The University of the West Indies, working together to build The Digital Front as part of our Web Programming II course.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3>Terrence Murray</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Project lead, child theme development, deployment, and the Breaking News Banner plugin. Terrence handles the technical architecture and keeps the repository running smoothly.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3>Jeremiah Clinton</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Reviews CPT, user roles and permissions, the Trending page query, and the AJAX Category Filter plugin. Jeremiah focuses on content structure and interactive features.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":3} -->
+<h3>Robyn-Catherine Khan</h3>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>Opinions CPT, About Us pages, breadcrumbs, related posts query, content seeding, and the Reading Progress Bar plugin. Robyn brings the editorial voice and content strategy.</p>
+<!-- /wp:paragraph -->',
+			'meta' => '_tdf_is_team',
+		],
+		'Mission' => [
+			'content' => '<!-- wp:heading {"level":2} -->
+<h2>Our Mission</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p>The Digital Front exists to make technology accessible, understandable, and interesting. We believe that good tech journalism should inform without intimidating — whether you are a developer, a casual user, or somewhere in between.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:heading {"level":2} -->
+<h2>What We Stand For</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph -->
+<p><strong>Clarity over complexity.</strong> We write for real people, not search engines. Every article is structured to be scannable, honest, and useful.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p><strong>Diverse perspectives.</strong> Our team covers Apple, Google, Samsung, and the broader mobile ecosystem — we are not loyal to any one brand.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p><strong>Learning by doing.</strong> This site is itself a learning project. Every custom post type, plugin, and query was built by hand as part of our coursework. We are not just writing about technology — we are building with it.</p>
+<!-- /wp:paragraph -->',
+			'meta' => '_tdf_is_mission',
+		],
 	];
 
 	foreach ( $children as $title => $cfg ) {
@@ -182,6 +274,10 @@ function tdf_setup_create_pages() {
 
 		if ( $existing ) {
 			$ids[ $title ] = $existing[0]->ID;
+			// Update content if our version is richer than what's stored.
+			if ( $cfg['content'] && strlen( $cfg['content'] ) > strlen( $existing[0]->post_content ) ) {
+				wp_update_post( [ 'ID' => $existing[0]->ID, 'post_content' => $cfg['content'] ] );
+			}
 			continue;
 		}
 
