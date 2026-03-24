@@ -34,6 +34,9 @@ wp-config.php
 local-xdebuginfo.php
 /wp-content/mu-plugins/
 
+# Query Monitor drop-in (symlink, machine-specific)
+/wp-content/db.php
+
 # Log files
 *.log
 

@@ -1,1 +1,0 @@
-/Users/terrencemurray/Local Sites/the-digital-front/app/public/wp-content/plugins/query-monitor/wp-content/db.php
