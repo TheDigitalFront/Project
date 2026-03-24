@@ -1,0 +1,206 @@
+/* TDF Breaking News Banner v2 */
+
+.tdf-banner {
+	background: var(--wp--preset--color--contrast, #111);
+	color: var(--wp--preset--color--base, #fff);
+	font-family: 'Manrope', sans-serif;
+	position: relative;
+	z-index: 100;
+}
+
+.tdf-banner__inner {
+	max-width: 1340px;
+	margin: 0 auto;
+	padding: 0 clamp(20px, 5vw, 50px);
+	display: flex;
+	align-items: center;
+	gap: 0;
+	height: 42px;
+}
+
+/* ---- Label ---- */
+
+.tdf-banner__label {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding-right: 1rem;
+	margin-right: 1rem;
+	border-right: 1px solid rgba(255, 255, 255, 0.12);
+	height: 100%;
+}
+
+.tdf-banner__pulse {
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	background: #ef4444;
+	box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5);
+	animation: tdf-pulse 2s ease-in-out infinite;
+}
+
+@keyframes tdf-pulse {
+	0%   { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.5); }
+	70%  { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+	100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.tdf-banner__label-text {
+	font-size: 0.6875rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 1.2px;
+	opacity: 0.7;
+}
+
+/* ---- Viewport (slides) ---- */
+
+.tdf-banner__viewport {
+	flex: 1;
+	position: relative;
+	height: 100%;
+	overflow: hidden;
+}
+
+.tdf-banner__slide {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	text-decoration: none;
+	color: inherit;
+	opacity: 0;
+	transform: translateY(8px);
+	transition: opacity 0.35s ease, transform 0.35s ease;
+	pointer-events: none;
+}
+
+.tdf-banner__slide.is-active {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+}
+
+.tdf-banner__slide.is-exiting {
+	opacity: 0;
+	transform: translateY(-8px);
+}
+
+.tdf-banner__num {
+	font-size: 0.625rem;
+	font-weight: 700;
+	opacity: 0.35;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0.5px;
+}
+
+.tdf-banner__title {
+	font-size: 0.8125rem;
+	font-weight: 400;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.tdf-banner__slide:hover .tdf-banner__title {
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.tdf-banner__cpt {
+	flex-shrink: 0;
+	font-size: 0.5625rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.8px;
+	padding: 0.15rem 0.45rem;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 3px;
+	opacity: 0.5;
+}
+
+/* ---- Progress bar ---- */
+
+.tdf-banner__progress {
+	flex-shrink: 0;
+	width: 48px;
+	height: 2px;
+	background: rgba(255, 255, 255, 0.1);
+	border-radius: 1px;
+	margin: 0 1rem;
+	overflow: hidden;
+}
+
+.tdf-banner__progress-bar {
+	height: 100%;
+	width: 0%;
+	background: rgba(255, 255, 255, 0.5);
+	border-radius: 1px;
+	transition: width 0.1s linear;
+}
+
+.tdf-banner__progress-bar.is-filling {
+	transition: none;
+}
+
+/* ---- Nav ---- */
+
+.tdf-banner__nav {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.tdf-banner__arrow {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 26px;
+	height: 26px;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 50%;
+	background: transparent;
+	color: inherit;
+	cursor: pointer;
+	padding: 0;
+	transition: background 0.15s, border-color 0.15s;
+}
+
+.tdf-banner__arrow:hover {
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+.tdf-banner__arrow svg {
+	display: block;
+}
+
+.tdf-banner__counter {
+	font-size: 0.6875rem;
+	font-variant-numeric: tabular-nums;
+	opacity: 0.5;
+	min-width: 2.5em;
+	text-align: center;
+}
+
+.tdf-banner__current {
+	opacity: 1;
+	font-weight: 600;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 640px) {
+	.tdf-banner__cpt,
+	.tdf-banner__progress,
+	.tdf-banner__num {
+		display: none;
+	}
+
+	.tdf-banner__inner {
+		height: 38px;
+	}
+}
