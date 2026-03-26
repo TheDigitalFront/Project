@@ -168,4 +168,28 @@ add_action( 'init', 'tdf_register_review_cpt' );
 add_action('act/init', 'tdf_register_review_fields');
 
 
+/**
+    * Create trending in tech page
+ */
+
+add_action('init', 'create_trending_in_tech_page');
+
+function create_trending_in_tech_page() {
+
+    // Check if page already exists
+    $page = get_page_by_path('trending-in-tech');
+
+    if (!$page) {
+        wp_insert_post([
+            'post_title'   => 'Trending in Tech',
+            'post_name'    => 'trending-in-tech', 
+            'post_status'  => 'publish',
+            'post_type'    => 'page',
+            'post_content' => 'This is the Trending in Tech page.',
+        ]);
+    }
+
+}
+
+
 
