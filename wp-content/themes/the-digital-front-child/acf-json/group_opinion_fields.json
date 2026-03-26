@@ -1,0 +1,38 @@
+{
+  "key": "group_opinion_fields",
+  "title": "Opinion Fields",
+  "fields": [
+    {
+      "key": "field_author_bio",
+      "label": "Author Bio",
+      "name": "author_bio",
+      "type": "textarea",
+      "required": 0
+    },
+    {
+      "key": "field_pull_quote",
+      "label": "Pull Quote",
+      "name": "pull_quote",
+      "type": "textarea",
+      "required": 0
+    },
+    {
+      "key": "field_related_article",
+      "label": "Related Article",
+      "name": "related_article",
+      "type": "relationship",
+      "post_type": ["article"],
+      "required": 0
+    }
+  ],
+  "location": [
+    [
+      {
+        "param": "post_type",
+        "operator": "==",
+        "value": "opinion"
+      }
+    ]
+  ],
+  "active": true
+}
