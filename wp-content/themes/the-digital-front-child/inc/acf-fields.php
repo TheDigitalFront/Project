@@ -103,3 +103,62 @@ function tdf_register_article_fields() {
 	] );
 }
 add_action( 'acf/init', 'tdf_register_article_fields' );
+
+// ─── Opinion Field Group ────────────────────────────────────────
+
+/**
+ * Register ACF field group for the Opinion post type.
+ *
+ * Fields:
+ *   - author_bio       (textarea)     — Short bio for the opinion author.
+ *   - pull_quote       (textarea)     — Highlighted pull quote from the piece.
+ *   - related_article  (relationship) — Link to a related Article post.
+ *
+ * @hooked acf/init
+ * @return void
+ */
+function tdf_register_opinion_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( [
+		'key'             => 'group_opinion_fields',
+		'title'           => 'Opinion Fields',
+		'show_in_rest'    => true,
+		'fields'          => [
+			[
+				'key'      => 'field_author_bio',
+				'label'    => 'Author Bio',
+				'name'     => 'author_bio',
+				'type'     => 'textarea',
+				'required' => 0,
+			],
+			[
+				'key'      => 'field_pull_quote',
+				'label'    => 'Pull Quote',
+				'name'     => 'pull_quote',
+				'type'     => 'textarea',
+				'required' => 0,
+			],
+			[
+				'key'       => 'field_related_article',
+				'label'     => 'Related Article',
+				'name'      => 'related_article',
+				'type'      => 'relationship',
+				'post_type' => [ 'article' ],
+				'required'  => 0,
+			],
+		],
+		'location'        => [ [ [
+			'param'    => 'post_type',
+			'operator' => '==',
+			'value'    => 'opinion',
+		] ] ],
+		'position'        => 'normal',
+		'style'           => 'default',
+		'label_placement' => 'top',
+		'active'          => true,
+	] );
+}
+add_action( 'acf/init', 'tdf_register_opinion_fields' );

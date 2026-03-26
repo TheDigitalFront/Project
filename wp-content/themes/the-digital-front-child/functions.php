@@ -6,7 +6,8 @@
  * into separate files under the inc/ directory:
  *
  *   inc/article-cpt.php               — Article CPT registration (Phase 2A, R1).
- *   inc/acf-fields.php                — ACF JSON sync + Article fields (Phase 2A, R2).
+ *   inc/opinion-cpt.php               — Opinion CPT registration (Phase 2B).
+ *   inc/acf-fields.php                — ACF JSON sync + Article & Opinion fields (Phase 2A/2B, R2).
  *   inc/shortcode-category-filter.php — [tdf_category_filter] shortcode / Query 2 (Phase 4, R5/R6).
  *   inc/setup.php                     — One-time environment setup (pages, menu, plugins, etc.).
  *
@@ -90,6 +91,7 @@ function tdf_fallback_menu() {
 $tdf_inc = get_stylesheet_directory() . '/inc';
 
 require_once $tdf_inc . '/article-cpt.php';               // Article CPT (Phase 2A).
-require_once $tdf_inc . '/acf-fields.php';                 // ACF sync + Article fields (Phase 2A).
+require_once $tdf_inc . '/opinion-cpt.php';               // Opinion CPT (Phase 2B).
+require_once $tdf_inc . '/acf-fields.php';                 // ACF sync + Article & Opinion fields (Phase 2A/2B).
 require_once $tdf_inc . '/shortcode-category-filter.php';  // [tdf_category_filter] / Query 2 (Phase 4).
 require_once $tdf_inc . '/setup.php';                      // One-time environment setup (Phase 1-3).
