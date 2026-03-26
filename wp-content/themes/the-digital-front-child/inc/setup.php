@@ -21,7 +21,7 @@
  * @since   1.0.0
  */
 
-define( 'TDF_SETUP_VERSION', '8' );
+define( 'TDF_SETUP_VERSION', '9' );
 
 /**
  * Master setup function — orchestrates all one-time configuration.
@@ -146,7 +146,8 @@ function tdf_setup_activate_plugins() {
  */
 function tdf_setup_create_pages() {
 	$pages = [
-		'Home'     => [ 'content' => '', 'meta' => '_tdf_is_home' ],
+		'Home'              => [ 'content' => '', 'meta' => '_tdf_is_home' ],
+		'Trending in Tech'  => [ 'content' => '', 'meta' => '_tdf_is_trending' ],
 		'About Us' => [
 			'content' => '<!-- wp:heading {"level":2} -->
 <h2>Who We Are</h2>
