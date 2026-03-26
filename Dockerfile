@@ -1,4 +1,4 @@
-FROM wordpress:6.9.1
+FROM wordpress:6.7.2-apache
 
 # Copy your wp-content (themes, plugins, uploads) into the image
 COPY wp-content/ /var/www/html/wp-content/
