@@ -1,0 +1,42 @@
+services:
+  wordpress:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_NAME: wordpress
+      DB_USER: wordpress
+      DB_PASSWORD: ${DB_PASSWORD:-wordpress}
+      SITE_URL: ${SITE_URL:-http://localhost}
+      WP_DEBUG: "false"
+      AUTH_KEY: ${AUTH_KEY:-change-me}
+      SECURE_AUTH_KEY: ${SECURE_AUTH_KEY:-change-me}
+      LOGGED_IN_KEY: ${LOGGED_IN_KEY:-change-me}
+      NONCE_KEY: ${NONCE_KEY:-change-me}
+      AUTH_SALT: ${AUTH_SALT:-change-me}
+      SECURE_AUTH_SALT: ${SECURE_AUTH_SALT:-change-me}
+      LOGGED_IN_SALT: ${LOGGED_IN_SALT:-change-me}
+      NONCE_SALT: ${NONCE_SALT:-change-me}
+    volumes:
+      - wp-uploads:/var/www/html/wp-content/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: ${DB_PASSWORD:-wordpress}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  db-data:
+  wp-uploads:
