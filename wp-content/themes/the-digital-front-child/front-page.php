@@ -120,6 +120,58 @@ $recent_posts = new WP_Query( [
 		</div>
 	</section>
 
+	<!-- Opinions -->
+	<?php
+	$opinions = new WP_Query( [
+		'post_type'      => 'opinion',
+		'posts_per_page' => 4,
+		'orderby'        => 'date',
+		'order'          => 'DESC',
+	] );
+	?>
+	<?php if ( $opinions->have_posts() ) : ?>
+	<section class="tdf-opinions" id="opinions">
+		<div class="tdf-container">
+			<h2 class="tdf-section__heading">Opinions</h2>
+			<div class="tdf-opinions__grid">
+				<?php while ( $opinions->have_posts() ) : $opinions->the_post(); ?>
+				<a href="<?php the_permalink(); ?>" class="tdf-opinions__card">
+					<?php if ( has_post_thumbnail() ) : ?>
+						<div class="tdf-opinions__img">
+							<?php the_post_thumbnail( 'medium_large' ); ?>
+						</div>
+					<?php endif; ?>
+					<div class="tdf-opinions__body">
+						<h3 class="tdf-opinions__title"><?php the_title(); ?></h3>
+						<?php $pull_quote = get_field( 'pull_quote' ); ?>
+						<?php if ( $pull_quote ) : ?>
+							<blockquote class="tdf-opinions__quote">&ldquo;<?php echo esc_html( wp_trim_words( $pull_quote, 20 ) ); ?>&rdquo;</blockquote>
+						<?php elseif ( has_excerpt() || get_the_content() ) : ?>
+							<p class="tdf-opinions__excerpt"><?php echo wp_trim_words( get_the_excerpt(), 20 ); ?></p>
+						<?php endif; ?>
+						<div class="tdf-opinions__meta">
+							<?php $bio = get_field( 'author_bio' ); ?>
+							<?php if ( $bio ) : ?>
+								<span class="tdf-opinions__author"><?php echo esc_html( wp_trim_words( $bio, 6 ) ); ?></span>
+								<span>&middot;</span>
+							<?php endif; ?>
+							<time><?php echo get_the_date(); ?></time>
+						</div>
+						<?php
+						$related = get_field( 'related_article' );
+						if ( $related ) :
+							$related_post = is_array( $related ) ? $related[0] : $related;
+						?>
+							<span class="tdf-opinions__related">Re: <?php echo esc_html( get_the_title( $related_post ) ); ?></span>
+						<?php endif; ?>
+					</div>
+				</a>
+				<?php endwhile; wp_reset_postdata(); ?>
+			</div>
+		</div>
+	</section>
+	<?php endif; ?>
+
 	<!-- What We Cover -->
 	<section class="tdf-topics">
 		<div class="tdf-container">
@@ -205,16 +257,22 @@ $recent_posts = new WP_Query( [
 		<div class="tdf-container">
 			<div class="tdf-stats__grid">
 				<?php
-				$article_count = wp_count_posts( 'article' );
-				$published     = $article_count->publish ?? 0;
-				$categories    = get_terms( [ 'taxonomy' => 'category', 'hide_empty' => false ] );
-				$cat_count     = is_array( $categories ) ? count( $categories ) : 0;
-				$authors       = count_users();
-				$author_count  = $authors['total_users'] ?? 1;
+				$article_count  = wp_count_posts( 'article' );
+				$published      = $article_count->publish ?? 0;
+				$opinion_count  = wp_count_posts( 'opinion' );
+				$opinions_pub   = $opinion_count->publish ?? 0;
+				$categories     = get_terms( [ 'taxonomy' => 'category', 'hide_empty' => false ] );
+				$cat_count      = is_array( $categories ) ? count( $categories ) : 0;
+				$authors        = count_users();
+				$author_count   = $authors['total_users'] ?? 1;
 				?>
 				<div class="tdf-stat">
 					<span class="tdf-stat__number"><?php echo esc_html( $published ); ?></span>
 					<span class="tdf-stat__label">Articles</span>
+				</div>
+				<div class="tdf-stat">
+					<span class="tdf-stat__number"><?php echo esc_html( $opinions_pub ); ?></span>
+					<span class="tdf-stat__label">Opinions</span>
 				</div>
 				<div class="tdf-stat">
 					<span class="tdf-stat__number"><?php echo esc_html( $cat_count ); ?></span>
