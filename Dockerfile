@@ -1,6 +1,7 @@
 FROM wordpress:6.9.1-apache
 
-# v2 - force rebuild
+ADD . /tmp/buildctx
+RUN rm -rf /tmp/buildctx
 COPY wp-content/ /var/www/html/wp-content/
 COPY wp-config-production.php /var/www/html/wp-config.php
 

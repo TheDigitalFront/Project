@@ -1,6 +1,9 @@
 services:
   wordpress:
-    build: .
+    build:
+      context: .
+      args:
+        CACHEBUST: ${CACHEBUST:-1}
     environment:
       DB_HOST: db
       DB_NAME: wordpress

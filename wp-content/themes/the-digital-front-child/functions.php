@@ -39,11 +39,12 @@ function tdf_child_enqueue_styles() {
         'parent-style',
         get_template_directory_uri() . '/style.css'
     );
+    $css_file = get_stylesheet_directory() . '/style.css';
     wp_enqueue_style(
         'child-style',
         get_stylesheet_directory_uri() . '/style.css',
         array( 'parent-style' ),
-        wp_get_theme()->get( 'Version' )
+        substr( md5_file( $css_file ), 0, 8 )
     );
 }
 add_action( 'wp_enqueue_scripts', 'tdf_child_enqueue_styles' );
