@@ -7,10 +7,13 @@ get_header();
 
 while ( have_posts() ) : the_post();
 
-$reading_time = get_field( 'reading_time' );
-$source_url   = get_field( 'source_url' );
-$video_embed  = get_field( 'video_embed' );
-$post_type_obj = get_post_type_object( get_post_type() );
+$reading_time   = get_field( 'reading_time' );
+$source_url     = get_field( 'source_url' );
+$video_embed    = get_field( 'video_embed' );
+$post_type_obj  = get_post_type_object( get_post_type() );
+$review_rating  = get_field( 'rating' );
+$product_name   = get_field( 'product_name' );
+$product_image  = get_field( 'product_image' );
 ?>
 
 <article class="tdf-single">
@@ -87,6 +90,32 @@ $post_type_obj = get_post_type_object( get_post_type() );
 		<div class="tdf-single__content">
 			<?php the_content(); ?>
 		</div>
+
+		<!-- Review Product Card (Reviews only) -->
+		<?php if ( get_post_type() === 'review' && ( $product_name || $product_image || $review_rating ) ) : ?>
+		<div class="tdf-review-card">
+			<?php if ( $product_image ) : ?>
+				<div class="tdf-review-card__img">
+					<img src="<?php echo esc_url( $product_image['url'] ); ?>" alt="<?php echo esc_attr( $product_image['alt'] ?: $product_name ); ?>">
+				</div>
+			<?php endif; ?>
+			<div class="tdf-review-card__body">
+				<?php if ( $product_name ) : ?>
+					<h3 class="tdf-review-card__product"><?php echo esc_html( $product_name ); ?></h3>
+				<?php endif; ?>
+				<?php if ( $review_rating ) : ?>
+					<div class="tdf-review-card__rating">
+						<div class="tdf-review-card__stars" aria-label="<?php echo esc_attr( $review_rating ); ?> out of 5 stars">
+							<?php for ( $i = 1; $i <= 5; $i++ ) : ?>
+								<span class="tdf-review-card__star <?php echo $i <= $review_rating ? 'tdf-review-card__star--filled' : ''; ?>">&#9733;</span>
+							<?php endfor; ?>
+						</div>
+						<span class="tdf-review-card__score"><?php echo esc_html( $review_rating ); ?>/5</span>
+					</div>
+				<?php endif; ?>
+			</div>
+		</div>
+		<?php endif; ?>
 
 		<!-- Opinions on this Article (Articles only) -->
 		<?php if ( get_post_type() === 'article' ) :
