@@ -162,3 +162,68 @@ function tdf_register_opinion_fields() {
 	] );
 }
 add_action( 'acf/init', 'tdf_register_opinion_fields' );
+
+// ─── Review Field Group ─────────────────────────────────────────
+
+/**
+ * Register ACF field group for the Review post type.
+ *
+ * Fields:
+ *   - rating        (number) — Product rating from 1 to 5.
+ *   - product_name  (text)   — Name of the product being reviewed.
+ *   - product_image (image)  — Product image for the review.
+ *
+ * @hooked acf/init
+ * @return void
+ */
+function tdf_register_review_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( [
+		'key'             => 'group_review_fields',
+		'title'           => 'Review Fields',
+		'show_in_rest'    => true,
+		'fields'          => [
+			[
+				'key'          => 'field_review_rating',
+				'label'        => 'Rating',
+				'name'         => 'rating',
+				'type'         => 'number',
+				'instructions' => 'Product rating (1–5).',
+				'required'     => 0,
+				'min'          => 1,
+				'max'          => 5,
+				'step'         => 1,
+			],
+			[
+				'key'      => 'field_review_product_name',
+				'label'    => 'Product Name',
+				'name'     => 'product_name',
+				'type'     => 'text',
+				'required' => 0,
+			],
+			[
+				'key'            => 'field_review_product_image',
+				'label'          => 'Product Image',
+				'name'           => 'product_image',
+				'type'           => 'image',
+				'required'       => 0,
+				'return_format'  => 'array',
+				'preview_size'   => 'medium',
+				'library'        => 'all',
+			],
+		],
+		'location'        => [ [ [
+			'param'    => 'post_type',
+			'operator' => '==',
+			'value'    => 'review',
+		] ] ],
+		'position'        => 'normal',
+		'style'           => 'default',
+		'label_placement' => 'top',
+		'active'          => true,
+	] );
+}
+add_action( 'acf/init', 'tdf_register_review_fields' );

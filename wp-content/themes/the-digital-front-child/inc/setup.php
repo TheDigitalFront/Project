@@ -11,7 +11,7 @@
  *   2. Creates required pages (Home, About Us, Team, Mission).
  *   3. Sets the static front page in Settings > Reading.
  *   4. Seeds categories for the article filter (Mobile Devices, Apple, Google, Samsung).
- *   5. Builds and assigns the primary nav menu with correct hierarchy.
+ *   5. Builds and assigns the primary nav menu with correct hierarchy (incl. Reviews).
  *   6. Enables Yoast SEO breadcrumbs.
  *   7. Enables front-end user registration with Subscriber as default role.
  *   8. Enables comments site-wide with moderation on first comment.
@@ -21,7 +21,7 @@
  * @since   1.0.0
  */
 
-define( 'TDF_SETUP_VERSION', '8' );
+define( 'TDF_SETUP_VERSION', '11' );
 
 /**
  * Master setup function — orchestrates all one-time configuration.
@@ -146,7 +146,8 @@ function tdf_setup_activate_plugins() {
  */
 function tdf_setup_create_pages() {
 	$pages = [
-		'Home'     => [ 'content' => '', 'meta' => '_tdf_is_home' ],
+		'Home'              => [ 'content' => '', 'meta' => '_tdf_is_home' ],
+		'Trending in Tech'  => [ 'content' => '', 'meta' => '_tdf_is_trending' ],
 		'About Us' => [
 			'content' => '<!-- wp:heading {"level":2} -->
 <h2>Who We Are</h2>
@@ -362,6 +363,24 @@ function tdf_setup_create_menu( $page_ids ) {
 			'menu-item-status' => 'publish', 'menu-item-position' => $pos++,
 		] );
 	}
+
+	// Opinions archive link.
+	wp_update_nav_menu_item( $menu_id, 0, [
+		'menu-item-title'  => 'Opinions',
+		'menu-item-url'    => home_url( '/opinion/' ),
+		'menu-item-type'   => 'custom',
+		'menu-item-status' => 'publish',
+		'menu-item-position' => $pos++,
+	] );
+
+	// Reviews archive link.
+	wp_update_nav_menu_item( $menu_id, 0, [
+		'menu-item-title'  => 'Reviews',
+		'menu-item-url'    => home_url( '/review/' ),
+		'menu-item-type'   => 'custom',
+		'menu-item-status' => 'publish',
+		'menu-item-position' => $pos++,
+	] );
 
 	// About (parent menu item with dropdown children).
 	$about_menu_id = wp_update_nav_menu_item( $menu_id, 0, [
