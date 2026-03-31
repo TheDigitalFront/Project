@@ -7,10 +7,13 @@ get_header();
 
 while ( have_posts() ) : the_post();
 
-$reading_time = get_field( 'reading_time' );
-$source_url   = get_field( 'source_url' );
-$video_embed  = get_field( 'video_embed' );
-$post_type_obj = get_post_type_object( get_post_type() );
+$reading_time   = get_field( 'reading_time' );
+$source_url     = get_field( 'source_url' );
+$video_embed    = get_field( 'video_embed' );
+$post_type_obj  = get_post_type_object( get_post_type() );
+$review_rating  = get_field( 'rating' );
+$product_name   = get_field( 'product_name' );
+$product_image  = get_field( 'product_image' );
 ?>
 
 <article class="tdf-single">
@@ -87,6 +90,94 @@ $post_type_obj = get_post_type_object( get_post_type() );
 		<div class="tdf-single__content">
 			<?php the_content(); ?>
 		</div>
+
+		<!-- Review Product Card (Reviews only) -->
+		<?php if ( get_post_type() === 'review' && ( $product_name || $product_image || $review_rating ) ) : ?>
+		<div class="tdf-review-card">
+			<?php if ( $product_image ) : ?>
+				<div class="tdf-review-card__img">
+					<img src="<?php echo esc_url( $product_image['url'] ); ?>" alt="<?php echo esc_attr( $product_image['alt'] ?: $product_name ); ?>">
+				</div>
+			<?php endif; ?>
+			<div class="tdf-review-card__body">
+				<?php if ( $product_name ) : ?>
+					<h3 class="tdf-review-card__product"><?php echo esc_html( $product_name ); ?></h3>
+				<?php endif; ?>
+				<?php if ( $review_rating ) : ?>
+					<div class="tdf-review-card__rating">
+						<div class="tdf-review-card__stars" aria-label="<?php echo esc_attr( $review_rating ); ?> out of 5 stars">
+							<?php for ( $i = 1; $i <= 5; $i++ ) : ?>
+								<span class="tdf-review-card__star <?php echo $i <= $review_rating ? 'tdf-review-card__star--filled' : ''; ?>">&#9733;</span>
+							<?php endfor; ?>
+						</div>
+						<span class="tdf-review-card__score"><?php echo esc_html( $review_rating ); ?>/5</span>
+					</div>
+				<?php endif; ?>
+			</div>
+		</div>
+		<?php endif; ?>
+
+		<!-- Opinions on this Article (Articles only) -->
+		<?php if ( get_post_type() === 'article' ) :
+			$linked_opinions = new WP_Query( [
+				'post_type'      => 'opinion',
+				'posts_per_page' => -1,
+				'meta_query'     => [ [
+					'key'     => 'related_article',
+					'value'   => '"' . get_the_ID() . '"',
+					'compare' => 'LIKE',
+				] ],
+			] );
+		?>
+			<?php if ( $linked_opinions->have_posts() ) : ?>
+			<div class="tdf-single__opinions">
+				<span class="tdf-single__opinions-label">Opinions on this article</span>
+				<div class="tdf-single__opinions-list">
+					<?php while ( $linked_opinions->have_posts() ) : $linked_opinions->the_post(); ?>
+					<a href="<?php the_permalink(); ?>" class="tdf-single__opinions-item">
+						<div class="tdf-single__opinions-body">
+							<h4 class="tdf-single__opinions-title"><?php the_title(); ?></h4>
+							<?php $pull_quote = get_field( 'pull_quote' ); ?>
+							<?php if ( $pull_quote ) : ?>
+								<p class="tdf-single__opinions-quote">&ldquo;<?php echo esc_html( wp_trim_words( $pull_quote, 15 ) ); ?>&rdquo;</p>
+							<?php endif; ?>
+							<div class="tdf-single__opinions-meta">
+								<span><?php the_author(); ?></span>
+								<span>&middot;</span>
+								<time><?php echo get_the_date(); ?></time>
+							</div>
+						</div>
+						<span class="tdf-single__opinions-arrow">&#8594;</span>
+					</a>
+					<?php endwhile; wp_reset_postdata(); ?>
+				</div>
+			</div>
+			<?php endif; ?>
+		<?php endif; ?>
+
+		<!-- Related Article (Opinions only) -->
+		<?php if ( get_post_type() === 'opinion' ) :
+			$related = get_field( 'related_article' );
+			$related_post = $related ? ( is_array( $related ) ? $related[0] : $related ) : null;
+		?>
+			<?php if ( $related_post ) : ?>
+			<div class="tdf-single__related">
+				<span class="tdf-single__related-label">Related Article</span>
+				<a href="<?php echo esc_url( get_permalink( $related_post ) ); ?>" class="tdf-single__related-card">
+					<?php if ( has_post_thumbnail( $related_post ) ) : ?>
+						<div class="tdf-single__related-img">
+							<?php echo get_the_post_thumbnail( $related_post, 'medium' ); ?>
+						</div>
+					<?php endif; ?>
+					<div class="tdf-single__related-body">
+						<h3 class="tdf-single__related-title"><?php echo esc_html( get_the_title( $related_post ) ); ?></h3>
+						<p class="tdf-single__related-excerpt"><?php echo wp_trim_words( get_the_excerpt( $related_post ), 15 ); ?></p>
+						<time class="tdf-single__related-date"><?php echo get_the_date( 'F j, Y', $related_post ); ?></time>
+					</div>
+				</a>
+			</div>
+			<?php endif; ?>
+		<?php endif; ?>
 
 		<!-- Source link -->
 		<?php if ( $source_url ) : ?>
