@@ -12,45 +12,29 @@
  */
 
 if (! defined('ABSPATH')) {
-    exit;
+    exit; /* prevents direct file access if someone tries to load the plugin file directly in the browser */
 }
 
-// CONSTANTS
-
+/* version constant used for cache busting when enqueuing CSS and JS assets */
 define('TDF_PB_VERSION', '1.0.0');
+/* option key used to store and retrieve plugin settings from the wp_options database table */
 define('TDF_PB_OPTION', 'tdf_progress_bar_settings');
 
-// ACTIVATION - set defaults
+register_activation_hook(__FILE__, 'tdf_pb_activate'); /* fires only when the plugin is activated in WP admin */
 
-register_activation_hook(__FILE__, 'tdf_pb_activate');
-
-/**
- * Set default plugin settings on activation.
- *
- * @return void
- */
 function tdf_pb_activate()
 {
-    if (! get_option(TDF_PB_OPTION)) {
+    if (! get_option(TDF_PB_OPTION)) { /* only sets defaults if no settings exist yet — avoids overwriting saved settings on reactivation */
         update_option(
             TDF_PB_OPTION,
             array(
-                'enabled' => 1,
-                'color'   => '#e63946',
+                'enabled' => 1,        /* bar is enabled by default */
+                'color'   => '#e63946', /* default accent red matching the site colour */
             )
         );
     }
 }
 
-// =========================================================
-// HELPERS
-// =========================================================
-
-/**
- * Return plugin settings with defaults.
- *
- * @return array
- */
 function tdf_pb_get_settings()
 {
     $defaults = array(
@@ -58,63 +42,48 @@ function tdf_pb_get_settings()
         'color'   => '#e63946',
     );
 
-    return wp_parse_args(get_option(TDF_PB_OPTION, array()), $defaults);
+    return wp_parse_args(get_option(TDF_PB_OPTION, array()), $defaults); /* merges saved settings with defaults so missing keys always have a fallback value */
 }
 
-// =========================================================
-// ADMIN SETTINGS PAGE
-// =========================================================
+add_action('admin_menu', 'tdf_pb_admin_menu'); /* registers the settings page in the WP admin menu */
 
-add_action('admin_menu', 'tdf_pb_admin_menu');
-
-/**
- * Register the settings page under Settings.
- *
- * @hooked admin_menu
- * @return void
- */
 function tdf_pb_admin_menu()
 {
     add_options_page(
-        __('Reading Progress Bar', 'tdf-progress-bar'),
-        __('Reading Progress Bar', 'tdf-progress-bar'),
-        'manage_options',
-        'tdf-progress-bar',
-        'tdf_pb_settings_page'
+        __('Reading Progress Bar', 'tdf-progress-bar'), /* page title shown in the browser tab */
+        __('Reading Progress Bar', 'tdf-progress-bar'), /* menu label shown under Settings in the sidebar */
+        'manage_options',                               /* only users with admin capabilities can access this page */
+        'tdf-progress-bar',                             /* unique slug for this settings page URL */
+        'tdf_pb_settings_page'                          /* callback function that renders the page content */
     );
 }
 
-/**
- * Render settings page.
- *
- * @return void
- */
 function tdf_pb_settings_page()
 {
-    if (isset($_POST['tdf_pb_save']) && check_admin_referer('tdf_pb_save_settings')) {
+    if (isset($_POST['tdf_pb_save']) && check_admin_referer('tdf_pb_save_settings')) { /* check_admin_referer verifies the nonce to protect against CSRF attacks */
         update_option(
             TDF_PB_OPTION,
             array(
-                'enabled' => isset($_POST['enabled']) ? 1 : 0,
-                'color'   => sanitize_hex_color(isset($_POST['color']) ? wp_unslash($_POST['color']) : '#e63946') ?: '#e63946',
+                'enabled' => isset($_POST['enabled']) ? 1 : 0, /* checkbox returns nothing when unchecked so we default to 0 */
+                'color'   => sanitize_hex_color(isset($_POST['color']) ? wp_unslash($_POST['color']) : '#e63946') ?: '#e63946', /* sanitize_hex_color ensures only valid hex values are saved */
             )
         );
 
-        echo '<div class="notice notice-success is-dismissible"><p>Settings saved.</p></div>';
+        echo '<div class="notice notice-success is-dismissible"><p>Settings saved.</p></div>'; /* shows a success message at the top of the admin page after saving */
     }
 
-    $s = tdf_pb_get_settings();
+    $s = tdf_pb_get_settings(); /* loads current settings to pre-fill the form fields */
 ?>
     <div class="wrap">
         <h1><?php esc_html_e('Reading Progress Bar Settings', 'tdf-progress-bar'); ?></h1>
         <form method="post">
-            <?php wp_nonce_field('tdf_pb_save_settings'); ?>
+            <?php wp_nonce_field('tdf_pb_save_settings'); /* outputs a hidden nonce field to verify the form was submitted from this page */ ?>
             <table class="form-table" role="presentation">
                 <tr>
                     <th scope="row"><?php esc_html_e('Enable Progress Bar', 'tdf-progress-bar'); ?></th>
                     <td>
                         <label>
-                            <input type="checkbox" name="enabled" value="1" <?php checked(1, $s['enabled']); ?> />
+                            <input type="checkbox" name="enabled" value="1" <?php checked(1, $s['enabled']); /* checked() outputs the checked attribute if the saved value matches */ ?> />
                             <?php esc_html_e('Show reading progress bar on single post/article pages', 'tdf-progress-bar'); ?>
                         </label>
                     </td>
@@ -126,7 +95,7 @@ function tdf_pb_settings_page()
                             type="color"
                             id="tdf_pb_color"
                             name="color"
-                            value="<?php echo esc_attr($s['color']); ?>" />
+                            value="<?php echo esc_attr($s['color']); /* esc_attr prevents XSS by escaping the output for use inside an HTML attribute */ ?>" />
                         <p class="description"><?php esc_html_e('The accent colour of the reading progress bar. Default: #e63946 (site accent red).', 'tdf-progress-bar'); ?></p>
                     </td>
                 </tr>
@@ -144,74 +113,48 @@ function tdf_pb_settings_page()
 <?php
 }
 
-// =========================================================
-// ENQUEUE ASSETS - only on single posts (is_single)
-// =========================================================
+add_action('wp_enqueue_scripts', 'tdf_pb_enqueue'); /* hooks into the front-end script/style loading system */
 
-add_action('wp_enqueue_scripts', 'tdf_pb_enqueue');
-
-/**
- * Enqueue the progress bar CSS and JS.
- *
- * Uses is_single() to limit loading to single post/article pages only.
- * Inline CSS is generated from saved settings (accent colour).
- *
- * @hooked wp_enqueue_scripts
- * @return void
- */
 function tdf_pb_enqueue()
 {
     $s = tdf_pb_get_settings();
     if (! $s['enabled']) {
-        return;
+        return; /* exits early if the bar is disabled in settings — no assets are loaded */
     }
 
-    // Only on single posts (standard posts + CPTs).
     if (! is_single()) {
-        return;
+        return; /* exits early on any page that is not a single post or CPT — keeps assets off archives, home, and pages */
     }
 
     wp_enqueue_style(
         'tdf-progress-bar',
-        plugin_dir_url(__FILE__) . 'css/progress.css',
+        plugin_dir_url(__FILE__) . 'css/progress.css', /* builds the full URL to the CSS file inside the plugin folder */
         array(),
-        TDF_PB_VERSION
+        TDF_PB_VERSION /* version number forces browsers to fetch the new file after plugin updates */
     );
 
     wp_enqueue_script(
         'tdf-progress-bar',
-        plugin_dir_url(__FILE__) . 'js/progress.js',
+        plugin_dir_url(__FILE__) . 'js/progress.js', /* builds the full URL to the JS file inside the plugin folder */
         array(),
         TDF_PB_VERSION,
-        true
+        true /* true loads the script in the footer so the DOM is ready before the script runs */
     );
 
-    // Inline CSS for the bar element - driven by the saved colour setting.
-    $color = esc_attr($s['color']);
-    $css   = "#tdf-reading-progress { background: {$color}; }";
-    wp_add_inline_style('tdf-progress-bar', $css);
+    $color = esc_attr($s['color']); /* sanitizes the saved colour before injecting it into CSS */
+    $css   = "#tdf-reading-progress { background: {$color}; }"; /* dynamically sets the bar colour from the admin setting */
+    wp_add_inline_style('tdf-progress-bar', $css); /* attaches the inline CSS directly after the enqueued stylesheet */
 }
 
-// =========================================================
-// INJECT BAR MARKUP INTO FOOTER
-// =========================================================
+add_action('wp_footer', 'tdf_pb_markup'); /* injects the bar element just before the closing body tag */
 
-add_action('wp_footer', 'tdf_pb_markup');
-
-/**
- * Output the progress bar <div> element into the page footer.
- *
- * Only outputs on single post/article pages when the bar is enabled.
- *
- * @hooked wp_footer
- * @return void
- */
 function tdf_pb_markup()
 {
     $s = tdf_pb_get_settings();
     if (! $s['enabled'] || ! is_single()) {
-        return;
+        return; /* double check — only outputs the bar if enabled and on a single post page */
     }
 
+    /* outputs the bar div with ARIA attributes so screen readers can announce reading progress */
     echo '<div id="tdf-reading-progress" role="progressbar" aria-label="' . esc_attr__('Reading progress', 'tdf-progress-bar') . '" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>';
 }
