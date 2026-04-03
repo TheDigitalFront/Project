@@ -20,8 +20,9 @@ get_header(); /* loads the site header including nav and breaking news banner */
             </nav>
         <?php endif; ?>
 
-        <header class="tdf-page__header">
+        <header class="tdf-page__header" style="text-align: center;">
             <h1 class="tdf-page__title">Create an Account</h1>
+            <p class="tdf-page__subtitle">Join The Digital Front community</p>
         </header>
 
         <div class="tdf-page__content">
@@ -69,7 +70,7 @@ get_header(); /* loads the site header including nav and breaking news banner */
                             required />
                     </div>
 
-                    <p class="tdf-form__note">A password will be sent to your email address.</p> /* WordPress auto-generates and emails a password on successful registration */
+                    <p class="tdf-form__note">A password will be sent to your email address.</p>
 
                     <?php
                     do_action('register_form'); /* allows plugins like WPForms Lite to inject additional fields into the form if needed */

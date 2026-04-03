@@ -21,7 +21,7 @@
  * @since   1.0.0
  */
 
-define( 'TDF_SETUP_VERSION', '11' );
+define( 'TDF_SETUP_VERSION', '12' );
 
 /**
  * Master setup function — orchestrates all one-time configuration.
@@ -73,9 +73,9 @@ function tdf_run_setup() {
 	}
 
 	// 7. Enable front-end registration (Phase 3, Step 3).
-	//    Default role = Subscriber (read + comment only).
+	//    Default role = Contributor (can write + submit posts for review).
 	update_option( 'users_can_register', '1' );
-	update_option( 'default_role', 'subscriber' );
+	update_option( 'default_role', 'contributor' );
 
 	// 8. Enable comments site-wide (Phase 3, Step 4).
 	//    Require name + email; first comment must be manually approved.
@@ -110,6 +110,7 @@ function tdf_setup_activate_plugins() {
 		'members/members.php',
 		'query-monitor/query-monitor.php',
 		'tdf-breaking-news/tdf-breaking-news.php',
+		'tdf-progress-bar/tdf-progress-bar.php',
 		'wordpress-seo/wp-seo.php',
 		'wp-migrate-db/wp-migrate-db.php',
 		'wp-pagenavi/wp-pagenavi.php',
@@ -148,6 +149,7 @@ function tdf_setup_create_pages() {
 	$pages = [
 		'Home'              => [ 'content' => '', 'meta' => '_tdf_is_home' ],
 		'Trending in Tech'  => [ 'content' => '', 'meta' => '_tdf_is_trending' ],
+		'Register' => [ 'content' => '', 'meta' => '_tdf_is_register', 'template' => 'page-register.php' ],
 		'About Us' => [
 			'content' => '<!-- wp:heading {"level":2} -->
 <h2>Who We Are</h2>
@@ -198,6 +200,9 @@ function tdf_setup_create_pages() {
 
 		if ( ! is_wp_error( $id ) ) {
 			update_post_meta( $id, $cfg['meta'], '1' );
+			if ( ! empty( $cfg['template'] ) ) {
+				update_post_meta( $id, '_wp_page_template', $cfg['template'] );
+			}
 			$ids[ $title ] = $id;
 		}
 	}

@@ -167,6 +167,32 @@ a {
 	background: var(--wp--preset--color--accent-5, #FBFAF3);
 }
 
+/* Auth buttons */
+
+.tdf-header__auth {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	flex-shrink: 0;
+}
+
+.tdf-header__auth .tdf-btn {
+	padding: 0.4rem 1rem;
+	font-size: 0.8125rem;
+	border-radius: 6px;
+}
+
+.tdf-header__auth .tdf-btn--outline {
+	padding: calc(0.4rem - 1px) calc(1rem - 1px);
+}
+
+.tdf-header__user {
+	font-size: 0.8125rem;
+	font-weight: 500;
+	color: var(--wp--preset--color--accent-4, #686868);
+	white-space: nowrap;
+}
+
 /* Hamburger toggle */
 
 .tdf-header__toggle {
@@ -256,6 +282,18 @@ a {
 		padding: 0.625rem clamp(20px, 5vw, 50px);
 		padding-left: calc(clamp(20px, 5vw, 50px) + 1rem);
 		font-size: 0.9375rem;
+	}
+
+	.tdf-header__auth {
+		order: 1;
+	}
+
+	.tdf-header__toggle {
+		order: 2;
+	}
+
+	.tdf-header__user {
+		display: none;
 	}
 }
 
@@ -1856,6 +1894,12 @@ a {
 	margin: 0 0 clamp(30px, 5vw, 50px);
 }
 
+.tdf-page__subtitle {
+	margin: 0.5rem 0 0;
+	font-size: 1rem;
+	color: var(--wp--preset--color--accent-4, #686868);
+}
+
 .tdf-page__content > *:first-child {
 	margin-top: 0;
 }
@@ -1897,6 +1941,79 @@ a {
 	margin: 0;
 	font-size: 0.875rem;
 	color: var(--wp--preset--color--accent-4, #686868);
+}
+
+/* === Registration / Generic Form === */
+
+.tdf-form {
+	max-width: 420px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+}
+
+.tdf-form + .tdf-form__alt-link {
+	text-align: center;
+}
+
+.tdf-form__group {
+	display: flex;
+	flex-direction: column;
+	gap: 0.375rem;
+}
+
+.tdf-form__label {
+	font-size: 0.875rem;
+	font-weight: 600;
+}
+
+.tdf-form__input {
+	padding: 0.7rem 0.875rem;
+	font-size: 0.9375rem;
+	font-family: inherit;
+	border: 1px solid color-mix(in srgb, currentColor 15%, transparent);
+	border-radius: 8px;
+	background: var(--wp--preset--color--base, #fff);
+	color: var(--wp--preset--color--contrast, #111);
+	transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.tdf-form__input:focus {
+	outline: none;
+	border-color: var(--wp--preset--color--accent-3, #503AA8);
+	box-shadow: 0 0 0 3px color-mix(in srgb, var(--wp--preset--color--accent-3, #503AA8) 12%, transparent);
+}
+
+.tdf-form__input::placeholder {
+	color: var(--wp--preset--color--accent-4, #686868);
+}
+
+.tdf-form__note {
+	margin: 0;
+	font-size: 0.8125rem;
+	color: var(--wp--preset--color--accent-4, #686868);
+}
+
+.tdf-form__error {
+	padding: 0.75rem 1rem;
+	background: #fef2f2;
+	color: #b91c1c;
+	border: 1px solid #fecaca;
+	border-radius: 8px;
+	font-size: 0.875rem;
+	margin-bottom: 0.5rem;
+}
+
+.tdf-form__alt-link {
+	margin-top: 1.5rem;
+	font-size: 0.875rem;
+	color: var(--wp--preset--color--accent-4, #686868);
+}
+
+.tdf-form .tdf-btn {
+	width: 100%;
+	text-align: center;
 }
 
 /* === Reviews Section (Front Page + Archive) === */
