@@ -2515,3 +2515,69 @@ a {
 		gap: 6px;
 	}
 }
+
+/* === Trending in Tech Page === */
+
+.tdf-hero-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-template-areas:
+		"item1 item2"
+		"item3 item4";
+	width: 100%;
+	gap: 16px;
+}
+
+.tdf-hero-grid__item:nth-child(1) { grid-area: item1; }
+.tdf-hero-grid__item:nth-child(2) { grid-area: item2; }
+.tdf-hero-grid__item:nth-child(3) { grid-area: item3; }
+.tdf-hero-grid__item:nth-child(4) { grid-area: item4; }
+
+.tdf-hero-grid__item {
+	position: relative;
+	overflow: hidden;
+	border-radius: 0.5rem;
+	display: block;
+}
+
+.tdf-hero-grid__img {
+	position: absolute;
+	inset: 0;
+}
+
+.tdf-hero-grid__img img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.tdf-hero-grid__item:nth-child(1) {
+	width: 100%;
+	height: 265px;
+}
+
+.tdf-hero-grid__item:nth-child(2) {
+	width: 80%;
+	height: 265px;
+}
+
+.tdf-hero-grid__item:nth-child(3) {
+	width: 80%;
+	height: 220px;
+}
+
+.tdf-hero-grid__item:nth-child(4) {
+	width: 100%;
+	height: 220px;
+	margin-left: -116px;
+}
+
+.tdf-hero-grid__overlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 20px;
+	color: #fff;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+}
