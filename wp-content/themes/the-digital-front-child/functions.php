@@ -1,5 +1,4 @@
 <?php
-trigger_error('Debug test message', E_USER_NOTICE);
 /**
  * The Digital Front Child Theme — functions and definitions.
  *
