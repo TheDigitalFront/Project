@@ -1,8 +1,10 @@
 FROM wordpress:6.9.1-apache
 
-COPY wp-content/themes/the-digital-front-child/ /usr/src/wordpress/wp-content/themes/the-digital-front-child/
-COPY wp-content/plugins/ /usr/src/wordpress/wp-content/plugins/
-COPY wp-config-production.php /var/www/html/wp-config.php
-COPY .htaccess /var/www/html/.htaccess
+ARG CACHEBUST=1
+RUN echo "Cache bust: $CACHEBUST"
 
-RUN chown -R www-data:www-data /usr/src/wordpress /var/www/html
+COPY wp-content/ /tmp/wp-content/
+COPY wp-config-production.php /tmp/wp-config.php
+COPY .htaccess /tmp/.htaccess
+
+CMD ["sh", "-c", "cp -a /tmp/wp-content/* /var/www/html/wp-content/ && cp /tmp/wp-config.php /var/www/html/wp-config.php && cp /tmp/.htaccess /var/www/html/.htaccess && chown -R www-data:www-data /var/www/html && apache2-foreground"]
