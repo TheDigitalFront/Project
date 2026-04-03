@@ -41,8 +41,7 @@ local-xdebuginfo.php
 # Log files
 *.log
 
-# htaccess
-/.htaccess
+# htaccess — tracked for production security rules
 
 wp-content/db.php
 
