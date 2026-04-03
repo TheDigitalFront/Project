@@ -110,6 +110,7 @@ function tdf_setup_activate_plugins() {
 		'members/members.php',
 		'query-monitor/query-monitor.php',
 		'tdf-breaking-news/tdf-breaking-news.php',
+		'tdf-category-filter/tdf-category-filter.php',
 		'tdf-progress-bar/tdf-progress-bar.php',
 		'wordpress-seo/wp-seo.php',
 		'wp-migrate-db/wp-migrate-db.php',

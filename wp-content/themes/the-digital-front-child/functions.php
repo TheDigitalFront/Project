@@ -113,5 +113,4 @@ require_once $tdf_inc . '/article-cpt.php';               // Article CPT (Phase 
 require_once $tdf_inc . '/opinion-cpt.php';               // Opinion CPT (Phase 2B).
 require_once $tdf_inc . '/review-cpt.php';                // Review CPT (Phase 2C).
 require_once $tdf_inc . '/acf-fields.php';                 // ACF sync + Article, Opinion & Review fields.
-require_once $tdf_inc . '/shortcode-category-filter.php';  // [tdf_category_filter] / Query 2 (Phase 4).
 require_once $tdf_inc . '/setup.php';                      // One-time environment setup (Phase 1-3).

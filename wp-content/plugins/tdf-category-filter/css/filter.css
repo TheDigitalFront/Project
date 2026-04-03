@@ -1,0 +1,27 @@
+/* Loading spinner — shown during AJAX requests */
+
+.tdf-filter__loading {
+	display: none;
+	justify-content: center;
+	align-items: center;
+	padding: 3rem 0;
+}
+
+.tdf-filter__spinner {
+	width: 32px;
+	height: 32px;
+	border: 3px solid color-mix(in srgb, currentColor 12%, transparent);
+	border-top-color: var(--wp--preset--color--contrast, #111);
+	border-radius: 50%;
+	animation: tdf-spin 0.6s linear infinite;
+}
+
+@keyframes tdf-spin {
+	to { transform: rotate(360deg); }
+}
+
+/* Transition for grid swap */
+
+#tdf-filter-results {
+	transition: opacity 0.15s ease;
+}
