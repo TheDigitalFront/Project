@@ -1,16 +1,17 @@
 services:
   wordpress:
+    restart: unless-stopped
     build:
       context: .
       args:
         CACHEBUST: ${CACHEBUST:-1}
     environment:
       DB_HOST: db
-      DB_NAME: wordpress
-      DB_USER: wordpress
+      DB_NAME: ${DB_NAME:-wordpress}
+      DB_USER: ${DB_USER:-wordpress}
       DB_PASSWORD: ${DB_PASSWORD:-wordpress}
       SITE_URL: ${SITE_URL:-http://localhost}
-      WP_DEBUG: "false"
+      WP_DEBUG: ${WP_DEBUG:-false}
       AUTH_KEY: ${AUTH_KEY:-change-me}
       SECURE_AUTH_KEY: ${SECURE_AUTH_KEY:-change-me}
       LOGGED_IN_KEY: ${LOGGED_IN_KEY:-change-me}
@@ -26,10 +27,11 @@ services:
         condition: service_healthy
 
   db:
+    restart: unless-stopped
     image: mysql:8.0
     environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
+      MYSQL_DATABASE: ${DB_NAME:-wordpress}
+      MYSQL_USER: ${DB_USER:-wordpress}
       MYSQL_PASSWORD: ${DB_PASSWORD:-wordpress}
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-rootpassword}
     volumes:

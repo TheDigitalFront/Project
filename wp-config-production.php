@@ -44,8 +44,9 @@ define( 'WP_DEBUG',         getenv( 'WP_DEBUG' ) === 'true' );
 define( 'WP_DEBUG_LOG',     getenv( 'WP_DEBUG' ) === 'true' );
 define( 'WP_DEBUG_DISPLAY', false );
 
-// ─── File Editing ────────────────────────────────────────────────
+// ─── File Editing & Hardening ────────────────────────────────────
 define( 'DISALLOW_FILE_EDIT', true );
+define( 'DISALLOW_FILE_MODS', true );
 
 // ─── Absolute Path ───────────────────────────────────────────────
 if ( ! defined( 'ABSPATH' ) ) {
