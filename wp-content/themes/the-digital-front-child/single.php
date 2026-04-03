@@ -198,6 +198,47 @@ $product_image  = get_field( 'product_image' );
 			</div>
 		<?php endif; ?>
 
+		<?php
+		/**
+		 * Query 3 — Related Posts by Shared Tag
+		 *
+		 * Finds other posts (across all CPTs) that share at least one tag
+		 * with the current post. Hidden entirely if no tags or no matches.
+		 */
+		$current_tags = wp_get_post_tags( get_the_ID(), [ 'fields' => 'ids' ] );
+
+		if ( ! empty( $current_tags ) ) :
+			$related_query = new WP_Query( [
+				'post_type'      => [ 'article', 'opinion', 'review', 'post' ],
+				'tag__in'        => $current_tags,
+				'post__not_in'   => [ get_the_ID() ],
+				'posts_per_page' => 3,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+			] );
+
+			if ( $related_query->have_posts() ) : ?>
+				<div class="tdf-single__also-like">
+					<span class="tdf-single__also-like-label">You may also like</span>
+					<div class="tdf-single__also-like-list">
+						<?php while ( $related_query->have_posts() ) : $related_query->the_post(); ?>
+							<a href="<?php the_permalink(); ?>" class="tdf-single__also-like-item">
+								<?php if ( has_post_thumbnail() ) : ?>
+									<div class="tdf-single__also-like-img">
+										<?php the_post_thumbnail( 'medium' ); ?>
+									</div>
+								<?php endif; ?>
+								<div class="tdf-single__also-like-body">
+									<h4 class="tdf-single__also-like-title"><?php the_title(); ?></h4>
+									<time class="tdf-single__also-like-date"><?php echo get_the_date(); ?></time>
+								</div>
+							</a>
+						<?php endwhile; wp_reset_postdata(); ?>
+					</div>
+				</div>
+		<?php endif;
+		endif; ?>
+
 		<!-- Post navigation -->
 		<nav class="tdf-single__nav">
 			<?php

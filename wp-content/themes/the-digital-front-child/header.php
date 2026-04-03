@@ -32,6 +32,16 @@
 			?>
 		</nav>
 
+		<div class="tdf-header__auth">
+			<?php if ( is_user_logged_in() ) : ?>
+				<span class="tdf-header__user">Welcome, <?php echo esc_html( wp_get_current_user()->display_name ); ?></span>
+				<a href="<?php echo esc_url( wp_logout_url( home_url( '/' ) ) ); ?>" class="tdf-btn tdf-btn--outline">Log out</a>
+			<?php else : ?>
+				<a href="<?php echo esc_url( wp_login_url() ); ?>" class="tdf-btn tdf-btn--outline">Log in</a>
+				<a href="<?php echo esc_url( home_url( '/register/' ) ); ?>" class="tdf-btn tdf-btn--primary">Register</a>
+			<?php endif; ?>
+		</div>
+
 		<button class="tdf-header__toggle" id="tdf-menu-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="tdf-nav">
 			<span class="tdf-header__toggle-bar"></span>
 			<span class="tdf-header__toggle-bar"></span>
