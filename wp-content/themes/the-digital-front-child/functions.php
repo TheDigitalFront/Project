@@ -86,7 +86,25 @@ function tdf_fallback_menu() {
 }
 
 // =====================================================================
-// 3. INCLUDES — Load modular functionality from inc/ directory.
+// 3. POST VIEW COUNTER — Track views for the Trending page query.
+// =====================================================================
+
+/**
+ * Increment a simple view counter stored in post meta (_tdf_post_views)
+ * each time a single post is viewed on the front end.
+ * Used by Query 1 (Trending in Tech) to order posts by popularity.
+ */
+function tdf_track_post_views() {
+	if ( is_single() && ! is_admin() ) {
+		$post_id = get_the_ID();
+		$views   = (int) get_post_meta( $post_id, '_tdf_post_views', true );
+		update_post_meta( $post_id, '_tdf_post_views', $views + 1 );
+	}
+}
+add_action( 'wp', 'tdf_track_post_views' );
+
+// =====================================================================
+// 4. INCLUDES — Load modular functionality from inc/ directory.
 // =====================================================================
 
 $tdf_inc = get_stylesheet_directory() . '/inc';
