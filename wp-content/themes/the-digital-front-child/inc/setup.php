@@ -370,14 +370,7 @@ function tdf_setup_create_menu( $page_ids ) {
 		] );
 	}
 
-	// Opinions archive link.
-	wp_update_nav_menu_item( $menu_id, 0, [
-		'menu-item-title'  => 'Opinions',
-		'menu-item-url'    => home_url( '/opinion/' ),
-		'menu-item-type'   => 'custom',
-		'menu-item-status' => 'publish',
-		'menu-item-position' => $pos++,
-	] );
+	// Opinions — archive disabled; omit from nav menu.
 
 	// Reviews archive link.
 	wp_update_nav_menu_item( $menu_id, 0, [
