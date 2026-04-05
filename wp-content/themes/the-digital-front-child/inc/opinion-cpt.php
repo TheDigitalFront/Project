@@ -3,7 +3,7 @@
 /* Opinion Custom Post Type registration
  * Registers the 'opinion' CPT for editorial opinion pieces on The Digital Front.
  * Supports the block editor, featured images, excerpts, and REST API.
- * Archive is enabled at /opinion/.
+ * Archive is disabled — opinions appear only under their related article.
  *
  * @package TheDigitalFront
  * @since   1.0.0
