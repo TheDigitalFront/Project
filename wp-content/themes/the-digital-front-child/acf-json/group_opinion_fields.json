@@ -7,14 +7,16 @@
       "label": "Author Bio",
       "name": "author_bio",
       "type": "textarea",
-      "required": 0
+      "required": 0,
+      "instructions": "Short author bio shown on opinion posts (keeps to ~50 words)"
     },
     {
       "key": "field_pull_quote",
       "label": "Pull Quote",
       "name": "pull_quote",
       "type": "textarea",
-      "required": 0
+      "required": 0,
+      "instructions": "Optional short pull quote used in opinion listings and cards"
     },
     {
       "key": "field_related_article",
@@ -22,7 +24,8 @@
       "name": "related_article",
       "type": "relationship",
       "post_type": ["article"],
-      "required": 0
+      "required": 0,
+      "instructions": "Select an `article` to link this opinion to for context"
     }
   ],
   "location": [
