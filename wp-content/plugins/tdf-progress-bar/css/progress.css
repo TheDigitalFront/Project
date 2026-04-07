@@ -1,19 +1,22 @@
+/* Reading progress indicator: fixed thin bar at top of viewport showing read progress */
 #tdf-reading-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 0;
-  height: 4px;
-  z-index: 100000;
-  transition: width 0.08s linear;
+  position: fixed; /* fixed to viewport */
+  top: 0; /* sits at very top unless admin bar present */
+  left: 0; /* starts at left edge */
+  width: 0; /* updated via JS to indicate progress */
+  height: 4px; /* thin visible bar */
+  z-index: 100000; /* ensure above most content */
+  transition: width 0.08s linear; /* smooth width animation */
 }
 
 .admin-bar #tdf-reading-progress {
+  /* shift down when WP admin bar is visible */
   top: 32px;
 }
 
 @media screen and (max-width: 782px) {
   .admin-bar #tdf-reading-progress {
+    /* taller admin bar on small screens */
     top: 46px;
   }
 }
